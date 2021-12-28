@@ -1,3 +1,3 @@
 # Alpha-mis-core
 
-Backend application for Alpha-mis application
+Backend application for Falcon application

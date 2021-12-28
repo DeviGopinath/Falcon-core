@@ -3,13 +3,12 @@ const controller = require('../controller/controller');
 const connection = require('../model/dbService');
 
 router.get('/', async (req, res) => {
-	try {
-		var data = req.query.month;
+	try {		
 		const db = controller.getDbServiceInstance();
 		let users = false;
 
-		users = await db.getAllData(data);
-		if (user) {
+		users = await db.getAllEmployees();
+		if (users) {
 			res.status(200).json({
 				message: 'Retrieval successful',
 				status: 'SUCCESS',
