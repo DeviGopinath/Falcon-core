@@ -7,13 +7,10 @@
 
 // module.exports = query;
 
-
-
-
 const query = {
-	query1: 'SELECT name, email, eid FROM employee;',
-	query2: 'SELECT name, client, estimation, budget, members FROM project;',
-	query3: 'SELECT employee.name, employee.eid, allocation.rate FROM employee INNER JOIN allocation ON allocation.eid = employee.eid WHERE allocation.pid=$1;'
+    query1: "SELECT name, email, eid FROM employee;",
+    query2: "SELECT pid, name, client, estimation, budget, members FROM project;",
+    query3: "SELECT project.name as projname	, employee.name, employee.eid, allocation.rate FROM allocation INNER JOIN employee ON allocation.eid = employee.eid INNER JOIN project on project.pid = allocation.pid WHERE allocation.pid=$1;",
 };
 
 module.exports = query;

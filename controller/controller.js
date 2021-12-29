@@ -8,7 +8,6 @@ class Controller {
         return instance ? instance : new Controller();
     }
 
-
     //////////////////INDIVIDUAL_PROJECT////////////////////
     //get_the_info_to_display_in_the_individual_project
     async getData(data) {
@@ -29,7 +28,6 @@ class Controller {
         }
     }
 
-
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
     async getAllEmployees(data) {
@@ -49,7 +47,6 @@ class Controller {
     }
     ////////////////////////////////////////////////////////////
 
-
     ////////////////////////PROJECT//////////////////////
     //get_the_info_to_display_in_the_project_detail's_page
     async getAllProjects(data) {
@@ -68,7 +65,6 @@ class Controller {
         }
     }
     ////////////////////////////////////////////////////////////
-
 }
 
 module.exports = Controller;

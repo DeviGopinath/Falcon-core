@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const controller = require("../controller/controller");
-const authorization = require("../middleware/authorization");
 const connection = require("../model/dbService");
 
 router.get("/", async (req, res) => {
