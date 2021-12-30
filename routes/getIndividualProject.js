@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
         const db = controller.getDbServiceInstance();
         let users = false;
 
-        users = await db.getData(data);
+        users = await db.getIndividualProject(data);
         if (users) {
             res.status(200).json({
                 message: "Retrieval successful",
