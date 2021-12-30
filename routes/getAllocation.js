@@ -7,7 +7,6 @@ router.get('/', async (req, res) => {
 		const db = controller.getDbServiceInstance();
 		let users = false;
         var data1 = req.query.month;
-		console.log(data1);
 		users = await db.getAllocation(data1);
 		if (users) {
 			res.status(200).json({

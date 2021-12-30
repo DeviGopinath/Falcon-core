@@ -69,14 +69,25 @@ class Controller {
     ////////////////////////ALLOCATION//////////////////////
     //get_the_info_to_display_in_the_allocation_detail's_page
     async getAllocation(data1) {
-        console.log(data1);
         try {
-            console.log(data1);
+            const empArr = [];
+            const resArr = [];
             const response = await new Promise((resolve, reject) => {
-                connection.query(`SELECT allocation.month, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE allocation.month = ${data1};`,  (err, result) => {
+                connection.query(`SELECT eid FROM employee;`,  (err, result) => {
+                    // console.log(result.rows);
                     if (err) reject(new Error(err.message));
-                    console.log(result.rows);
-                    resolve(result.rows);
+                    for (var i of result.rows) {
+                        empArr.push(i.eid);
+                    }
+                    for (var j in empArr){
+                        var b = parseInt(empArr[j]);
+                        connection.query(`SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${b} AND allocation.month = ${data1};`,  (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        resArr.push(result.rows);
+                        console.log(resArr);
+                        resolve(resArr);
+                    });
+                }
                 });
             });
             return response;    
