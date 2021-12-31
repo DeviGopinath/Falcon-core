@@ -70,26 +70,34 @@ class Controller {
     //get_the_info_to_display_in_the_allocation_detail's_page
     async getAllocation(data1) {
         var data = data1;
-        
+        console.log(data);
+
         try {
             const resArr = [];
             const response = await new Promise((resolve, reject) => {
-                connection.query(`SELECT eid FROM employee;`,  (err, result) => {
+                connection.query(`SELECT eid FROM employee;`, (err, result) => {
                     if (err) reject(new Error(err.message));
-                    result.rows.map((i,j) => {                       
-                        var sql = `SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = $1 AND allocation.month = $2`;
-                        connection.query(sql, [i.eid, data], (error, result1) => {
-                            var item = result1.rows;
-                            resArr.push(item);
-                            console.log(resArr);
-                            if (result.rows.length === result1.rows.length)
-                                { resolve(resArr);}
-                            })
-                            
-                        }) 
-                });               
+                    console.log(result.rows);
+                    result.rows.map((i, j) => {
+                        //var sql = `SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = $1 AND allocation.month = $2`;
+                        console.log(i.eid, data);
+                        connection.query(
+                            `SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
+                            (error, result1) => {
+                                var item = result1.rows;
+                                resArr.push(item);
+                                console.log(resArr);
+                                if (
+                                    result.rows.length === result1.rows.length
+                                ) {
+                                    resolve(resArr);
+                                }
+                            }
+                        );
+                    });
+                });
             });
-            return response;    
+            return response;
         } catch (error) {
             console.log("error in reading all data", error);
             return false;
