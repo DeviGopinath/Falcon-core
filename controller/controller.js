@@ -77,18 +77,21 @@ class Controller {
             const response = await new Promise((resolve, reject) => {
                 connection.query(`SELECT eid FROM employee;`, (err, result) => {
                     if (err) reject(new Error(err.message));
-                    console.log(result.rows);
+                    var l = result.rows.length;
+                    console.log(l);
                     result.rows.map((i, j) => {
-                        //var sql = `SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = $1 AND allocation.month = $2`;
-                        console.log(i.eid, data);
+                        console.log(i.eid, data, j);
                         connection.query(
-                            `SELECT allocation.month, employee.eid, employee.name, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
+                            `SELECT allocation.month, employee.eid, employee.name as empname, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
                             (error, result1) => {
                                 var item = result1.rows;
                                 resArr.push(item);
-                                console.log(resArr);
+                                console.log(
+                                    result.rows.length,
+                                    result1.rows.length
+                                );
                                 if (
-                                    result.rows.eid === result1.rows.eid
+                                    result1.rows[0].eid === result.rows[l-1].eid
                                 ) {
                                     resolve(resArr);
                                 }
