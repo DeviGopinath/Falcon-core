@@ -88,7 +88,7 @@ class Controller {
                                 resArr.push(item);
                                 console.log(resArr);
                                 if (
-                                    result.rows.length === result1.rows.length
+                                    result.rows.eid === result1.rows.eid
                                 ) {
                                     resolve(resArr);
                                 }
