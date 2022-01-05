@@ -8,10 +8,50 @@ class Controller {
         return instance ? instance : new Controller();
     }
 
+    //////////////////ADD MEMBER///////////////////////
+    //add_a_member_to_employee's_table
+    async addMember(eid, name, email) {
+        console.log(eid, name, email + "data");
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(query.query5, [eid, name, email], (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+
+            return response;
+        } catch (error) {
+            console.log("error in reading base data", error);
+            return false;
+        }
+    }
+
+
+    //////////////////ADD PROJECT///////////////////////
+    //add_a_member_to_project's_table
+    async addProject(pid, name, client, estimation, budget, members) {
+        console.log(pid, name, client, estimation, budget, members + "data");
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(query.query6, [pid, name, client, estimation, budget, members], (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+
+            return response;
+        } catch (error) {
+            console.log("error in reading base data", error);
+            return false;
+        }
+    }
+
     //////////////////INDIVIDUAL_PROJECT////////////////////
     //get_the_info_to_display_in_the_individual_project
     async getIndividualProject(data) {
-        console.log(data + "data");
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(query.query3, [data], (err, result) => {
