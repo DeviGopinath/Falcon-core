@@ -59,7 +59,9 @@ class Controller {
     async addAllocation(eid, pid, rate, allocation, month, revenue) {
         try {
             const response = await new Promise((resolve, reject) => {
-                connection.query(query.query7, [eid, pid, rate, allocation, month, revenue], (err, result) => {
+                connection.query(
+                    `INSERT INTO allocation (eid, pid, rate, allocation, month, revenue) VALUES (${eid}, ${pid}, ${rate}, ${allocation}, '${month}', ${revenue}) returning eid, pid, rate, allocation, month, revenue;`,
+                 (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve(result.rows);
                 });

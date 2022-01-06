@@ -4,12 +4,12 @@ const connection = require("../model/dbService");
 
 router.post("/", async (req, res) => {
     try {
-        var eid = req.query.eid;
-        var pid = req.query.pid;
-        var rate = req.query.rate;
-        var allocation = req.query.allocation;
-        var month = req.query.month;
-        var revenue = req.query.revenue;
+        var eid = req.body.eid;
+        var pid = req.body.pid;
+        var rate = req.body.rate;
+        var allocation = req.body.allocation;
+        var month = req.body.month;
+        var revenue = req.body.revenue;
 
         const db = controller.getDbServiceInstance();
         let users = false;
