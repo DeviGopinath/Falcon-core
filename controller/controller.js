@@ -11,14 +11,16 @@ class Controller {
     //////////////////ADD MEMBER///////////////////////
     //add_a_member_to_employee's_table
     async addMember(eid, name, email) {
-        console.log(eid, name, email + "data");
         try {
             const response = await new Promise((resolve, reject) => {
-                connection.query(query.query5, [eid, name, email], (err, result) => {
-                    if (err) reject(new Error(err.message));
-
-                    resolve(result.rows);
-                });
+                connection.query(
+                    `INSERT INTO employee VALUES (${eid}, '${name}', '${email}') returning eid, name, email;`,
+                    (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        console.log("result", result);
+                        resolve(result.rows);
+                    }
+                );
             });
 
             return response;
@@ -28,18 +30,20 @@ class Controller {
         }
     }
 
-
     //////////////////ADD PROJECT///////////////////////
     //add_a_member_to_project's_table
     async addProject(pid, name, client, estimation, budget, members) {
         console.log(pid, name, client, estimation, budget, members + "data");
         try {
             const response = await new Promise((resolve, reject) => {
-                connection.query(query.query6, [pid, name, client, estimation, budget, members], (err, result) => {
-                    if (err) reject(new Error(err.message));
-
-                    resolve(result.rows);
-                });
+                connection.query(
+                    `INSERT INTO project VALUES (${pid}, '${name}', '${client}', ${estimation}, ${budget}, ${members}) returning pid, name,client, estimation, budget, members;`,
+                    (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        console.log(result.rows);
+                        //resolve(result.rows);
+                    }
+                );
             });
 
             return response;
@@ -126,13 +130,8 @@ class Controller {
                             (error, result1) => {
                                 var item = result1.rows;
                                 resArr.push(item);
-                                console.log(
-                                    result.rows.length,
-                                    result1.rows.length
-                                );
-                                if (
-                                    result1.rows[0].eid === result.rows[l-1].eid
-                                ) {
+                                console.log(resArr.length, result.rows.length);
+                                if (resArr.length === result.rows.length) {
                                     resolve(resArr);
                                 }
                             }

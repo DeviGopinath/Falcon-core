@@ -4,9 +4,10 @@ const connection = require("../model/dbService");
 
 router.post("/", async (req, res) => {
     try {
-        var eid = req.query.eid;
-        var name = req.query.name;
-        var email = req.query.email;
+        var eid = req.body.eid;
+        var name = req.body.ename;
+        var email = req.body.email;
+        console.log(eid, name, email);
 
         const db = controller.getDbServiceInstance();
         let users = false;
