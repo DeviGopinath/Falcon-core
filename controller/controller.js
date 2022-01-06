@@ -49,6 +49,26 @@ class Controller {
         }
     }
 
+
+    //////////////////ADD ALLOCATION///////////////////////
+    //add_an_allocation_to_allocation's_table
+    async addAllocation(eid, pid, rate, allocation, month, revenue) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(query.query7, [eid, pid, rate, allocation, month, revenue], (err, result) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(result.rows);
+                });
+            });
+
+            return response;
+        } catch (error) {
+            console.log("error in reading base data", error);
+            return false;
+        }
+    }
+
+
     //////////////////INDIVIDUAL_PROJECT////////////////////
     //get_the_info_to_display_in_the_individual_project
     async getIndividualProject(data) {
@@ -67,6 +87,7 @@ class Controller {
             return false;
         }
     }
+
 
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
@@ -87,6 +108,7 @@ class Controller {
     }
     ////////////////////////////////////////////////////////////
 
+
     ////////////////////////PROJECT//////////////////////
     //get_the_info_to_display_in_the_project_detail's_page
     async getAllProjects() {
@@ -104,7 +126,7 @@ class Controller {
             return false;
         }
     }
-    ////////////////////////////////////////////////////////////
+
 
     ////////////////////////ALLOCATION//////////////////////
     //get_the_info_to_display_in_the_allocation_detail's_page

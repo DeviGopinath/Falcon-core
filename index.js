@@ -6,6 +6,7 @@ const getAllEmployees = require("./routes/getAllEmployees");
 const getAllProjects = require("./routes/getAllProjects");
 const addMember = require("./routes/addMember");
 const addProject = require("./routes/addProject");
+const addAllocation = require("./routes/addAllocation");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -28,6 +29,7 @@ app.use("/people/getAllEmployees", getAllEmployees);
 app.use("/projects/getAllProject", getAllProjects);
 app.use("/people/addMember", addMember);
 app.use("/projects/addProject", addProject);
+app.use("/projects/IndividualProject/addAllocation", addAllocation);
 
 
 
