@@ -53,7 +53,6 @@ class Controller {
         }
     }
 
-
     //////////////////ADD ALLOCATION///////////////////////
     //add_an_allocation_to_allocation's_table
     async addAllocation(eid, pid, rate, allocation, month, revenue) {
@@ -61,10 +60,12 @@ class Controller {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
                     `INSERT INTO allocation (eid, pid, rate, allocation, month, revenue) VALUES (${eid}, ${pid}, ${rate}, ${allocation}, '${month}', ${revenue}) returning eid, pid, rate, allocation, month, revenue;`,
-                 (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result.rows);
-                });
+                    (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        console.log(result);
+                        resolve(result.rows);
+                    }
+                );
             });
 
             return response;
@@ -73,7 +74,6 @@ class Controller {
             return false;
         }
     }
-
 
     //////////////////INDIVIDUAL_PROJECT////////////////////
     //get_the_info_to_display_in_the_individual_project
@@ -94,7 +94,6 @@ class Controller {
         }
     }
 
-
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
     async getAllEmployees() {
@@ -114,7 +113,6 @@ class Controller {
     }
     ////////////////////////////////////////////////////////////
 
-
     ////////////////////////PROJECT//////////////////////
     //get_the_info_to_display_in_the_project_detail's_page
     async getAllProjects() {
@@ -132,7 +130,6 @@ class Controller {
             return false;
         }
     }
-
 
     ////////////////////////ALLOCATION//////////////////////
     //get_the_info_to_display_in_the_allocation_detail's_page

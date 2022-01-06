@@ -29,8 +29,7 @@ app.use("/people/getAllEmployees", getAllEmployees);
 app.use("/projects/getAllProject", getAllProjects);
 app.use("/people/addMember", addMember);
 app.use("/projects/addProject", addProject);
-app.use("/projects/IndividualProject/addAllocation", addAllocation);
-
+app.use("/addAllocation", addAllocation);
 
 app.listen(process.env.PGSERVERPORT, () => {
     console.log("Running on port 5000");

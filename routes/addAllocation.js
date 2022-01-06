@@ -11,10 +11,19 @@ router.post("/", async (req, res) => {
         var month = req.body.month;
         var revenue = req.body.revenue;
 
+        console.log(eid, pid, rate, allocation, month, revenue);
+
         const db = controller.getDbServiceInstance();
         let users = false;
 
-        users = await db.addAllocation(eid, pid, rate, allocation, month, revenue);
+        users = await db.addAllocation(
+            eid,
+            pid,
+            rate,
+            allocation,
+            month,
+            revenue
+        );
         if (users) {
             res.status(200).json({
                 message: "Retrieval successful",
