@@ -41,7 +41,7 @@ class Controller {
                     (err, result) => {
                         if (err) reject(new Error(err.message));
                         console.log(result.rows);
-                        //resolve(result.rows);
+                        resolve(result.rows);
                     }
                 );
             });

@@ -11,6 +11,8 @@ router.post("/", async (req, res) => {
         var budget = req.body.budget;
         var members = req.body.members;
 
+        console.log(pid, name, client, estimation, budget, members + "data");
+
         const db = controller.getDbServiceInstance();
         let users = false;
 
