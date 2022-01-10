@@ -143,20 +143,32 @@ class Controller {
         try {
             const resArr = [];
             const response = await new Promise((resolve, reject) => {
-                connection.query(`SELECT eid FROM employee;`, (err, result) => {
+                connection.query(`SELECT eid FROM allocation;`, (err, result) => {
                     if (err) reject(new Error(err.message));
                     var l = result.rows.length;
-                    console.log(l);
                     result.rows.map((i, j) => {
-                        console.log(i.eid, data, j);
                         connection.query(
                             `SELECT allocation.month, employee.eid, employee.name as empname, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
                             (error, result1) => {
                                 var item = result1.rows;
                                 resArr.push(item);
-                                console.log(resArr.length, result.rows.length);
                                 if (resArr.length === result.rows.length) {
-                                    resolve(resArr);
+                                    console.log('///////////result///////////////',resArr);
+                                    connection.query(
+                                        `SELECT employee.eid, employee.name FROM employee WHERE eid IN (SELECT eid FROM employee EXCEPT SELECT eid FROM allocation);`,
+                                        (error, result2) => {
+                                            console.log(result2.rows)
+                                            for(let i=0; i<=(result2.rows.length-1); i++){
+                                                resArr.push(  [ {month:result1.rows[0].month,
+                                                                eid: result2.rows[i].eid,
+                                                                empname: result2.rows[i].name,
+                                                                name: '',
+                                                                allocation: 0,
+                                                                revenue: null }]);}
+                                                console.log(resArr);
+                                                resolve(resArr);
+                                        }
+                                    )
                                 }
                             }
                         );
