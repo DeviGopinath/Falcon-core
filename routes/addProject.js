@@ -9,9 +9,7 @@ router.post("/", async (req, res) => {
         var client = req.body.client;
         var estimation = req.body.estimation;
         var budget = req.body.budget;
-        var members = req.body.members;
-
-        console.log(pid, name, client, estimation, budget, members + "data");
+        // var members = req.body.members;
 
         const db = controller.getDbServiceInstance();
         let users = false;
@@ -21,8 +19,8 @@ router.post("/", async (req, res) => {
             name,
             client,
             estimation,
-            budget,
-            members
+            budget
+            // members
         );
         if (users) {
             res.status(200).json({

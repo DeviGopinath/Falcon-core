@@ -32,15 +32,14 @@ class Controller {
 
     //////////////////ADD PROJECT///////////////////////
     //add_a_member_to_project's_table
-    async addProject(pid, name, client, estimation, budget, members) {
-        console.log(pid, name, client, estimation, budget, members + "data");
+    async addProject(pid, name, client, estimation, budget) {
+        console.log(pid, name, client, estimation, budget + " data");
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
-                    `INSERT INTO project VALUES (${pid}, '${name}', '${client}', ${estimation}, ${budget}, ${members}) returning pid, name,client, estimation, budget, members;`,
+                    `INSERT INTO project(pid, name, client, estimation, budget) VALUES (${pid}, '${name}', '${client}', ${estimation}, ${budget}) returning pid, name,client, estimation, budget;`,
                     (err, result) => {
                         if (err) reject(new Error(err.message));
-                        console.log(result.rows);
                         resolve(result.rows);
                     }
                 );
