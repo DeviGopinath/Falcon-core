@@ -93,6 +93,29 @@ class Controller {
         }
     }
 
+
+    /////////////////////MEMBER_COUNT////////////////////////////
+    //update_the_member_count_in_individual_project's_page
+    async memberCount(data) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(
+                    `UPDATE project SET members = members + 1 WHERE name = '${data}' returning name;`,
+                    (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log("error in reading all data", error);
+            return false;
+        }
+    }
+    ////////////////////////////////////////////////////////////
+
+
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
     async getAllEmployees() {

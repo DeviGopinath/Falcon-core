@@ -4,23 +4,11 @@ const connection = require("../model/dbService");
 
 router.post("/", async (req, res) => {
     try {
-        var pid = req.body.pid;
-        var name = req.body.pname;
-        var client = req.body.client;
-        var estimation = req.body.estimation;
-        var budget = req.body.budget;
-
         const db = controller.getDbServiceInstance();
+        var data = req.body.name;
         let users = false;
 
-        users = await db.addProject(
-            pid,
-            name,
-            client,
-            estimation,
-            budget
-            // members
-        );
+        users = await db.memberCount(data);
         if (users) {
             res.status(200).json({
                 message: "Retrieval successful",
