@@ -37,7 +37,7 @@ class Controller {
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
-                    `INSERT INTO project(pid, name, client, estimation, budget) VALUES (${pid}, '${name}', '${client}', ${estimation}, ${budget}) returning pid, name,client, estimation, budget;`,
+                    `INSERT INTO project(pid, name, client, estimation, budget, members) VALUES (${pid}, '${name}', '${client}', ${estimation}, ${budget}, 0) returning pid, name,client, estimation, budget;`,
                     (err, result) => {
                         if (err) reject(new Error(err.message));
                         resolve(result.rows);
