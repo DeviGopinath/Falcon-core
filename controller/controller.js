@@ -100,7 +100,7 @@ class Controller {
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
-                    `UPDATE project SET members = members + 1 WHERE name = '${data}' returning name;`,
+                    `UPDATE project SET members = members + 1 WHERE pid = ${data} returning pid;`,
                     (err, result) => {
                     if (err) reject(new Error(err.message));
 

@@ -5,7 +5,7 @@ const connection = require("../model/dbService");
 router.post("/", async (req, res) => {
     try {
         const db = controller.getDbServiceInstance();
-        var data = req.body.name;
+        var data = req.body.pid;
         let users = false;
 
         users = await db.memberCount(data);
