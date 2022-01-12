@@ -17,7 +17,6 @@ class Controller {
                     `INSERT INTO employee VALUES (${eid}, '${name}', '${email}') returning eid, name, email;`,
                     (err, result) => {
                         if (err) reject(new Error(err.message));
-                        console.log("result", result);
                         resolve(result.rows);
                     }
                 );
@@ -61,7 +60,6 @@ class Controller {
                     `INSERT INTO allocation (eid, pid, rate, allocation, month, revenue) VALUES (${eid}, ${pid}, ${rate}, ${allocation}, '${month}', ${revenue}) returning eid, pid, rate, allocation, month, revenue;`,
                     (err, result) => {
                         if (err) reject(new Error(err.message));
-                        console.log(result);
                         resolve(result.rows);
                     }
                 );
@@ -70,6 +68,26 @@ class Controller {
             return response;
         } catch (error) {
             console.log("error in reading base data", error);
+            return false;
+        }
+    }
+
+
+    //////////////////PROJECTS A MEMBER IS NOT A PART OF//////////////
+    //get_the_project_into which_a_member_is_not_allocated_in_a_month
+    async allocateMember(eid,month) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(`SELECT project.pid FROM project EXCEPT SELECT allocation.pid FROM allocation INNER JOIN employee ON allocation.month= '${month}' AND employee.eid = ${eid};`,
+                 (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log("error in reading all data", error);
             return false;
         }
     }
@@ -169,37 +187,27 @@ class Controller {
                         for(let i=0; i<=(result2.rows.length-1); i++){
                             resArr.push(  [ {month:data.replace(/[^a-zA-Z]+/g, ''),
                                             eid: result2.rows[i].eid,
-                                            empname: result2.rows[i].name,
-                                            // name: '',
-                                            // allocation: 0,
-                                            // revenue: null
-                                         }]);}
-                            // console.log(resArr);
-                            // resolve(resArr);
-                //     }
-                // )
-                connection.query(`SELECT DISTINCT eid FROM allocation;`, (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    var l = result.rows.length;
-                    result.rows.map((i, j) => {
-                        connection.query(
-                            `SELECT allocation.month, employee.eid, employee.name as empname, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
-                            (error, result1) => {
-                                var item = result1.rows;
-                                resArr.push(item);
-                                if (resArr.length == (result.rows.length + result2.rows.length)) {
-                                    console.log('///////////result///////////////',resArr);
-
-                                    resolve(resArr);
-                                }
-                            }
-                        );
+                                            empname: result2.rows[i].name
+                                                    }]);}
+                            connection.query(`SELECT DISTINCT eid FROM allocation;`, (err, result) => {
+                                if (err) reject(new Error(err.message));
+                                var l = result.rows.length;
+                                result.rows.map((i, j) => {
+                                    connection.query(
+                                        `SELECT allocation.month, employee.eid, employee.name as empname, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
+                                        (error, result1) => {
+                                            var item = result1.rows;
+                                            resArr.push(item);
+                                            if (resArr.length == (result.rows.length + result2.rows.length)) {
+                                                resolve(resArr);
+                                            }
+                                        }
+                                    );
+                                });
+                            });
+                        })
                     });
-                });
-            }
-            )
-            });
-            return response;
+                    return response;
         } catch (error) {
             console.log("error in reading all data", error);
             return false;
