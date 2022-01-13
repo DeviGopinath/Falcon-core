@@ -72,18 +72,19 @@ class Controller {
         }
     }
 
-
     //////////////////PROJECTS A MEMBER IS NOT A PART OF//////////////
     //get_the_project_into which_a_member_is_not_allocated_in_a_month
-    async allocateMember(eid,month) {
+    async allocateMember(eid, month) {
         try {
             const response = await new Promise((resolve, reject) => {
-                connection.query(`SELECT project.pid FROM project EXCEPT SELECT allocation.pid FROM allocation INNER JOIN employee ON allocation.month= '${month}' AND employee.eid = ${eid};`,
-                 (err, result) => {
-                    if (err) reject(new Error(err.message));
-
-                    resolve(result.rows);
-                });
+                connection.query(
+                    `SELECT project.pid FROM project EXCEPT SELECT allocation.pid FROM allocation INNER JOIN employee ON employee.eid = allocation.eid WHERE allocation.month= '${month}' AND employee.eid = ${eid};`,
+                    (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        console.log(result.rows);
+                        resolve(result.rows);
+                    }
+                );
             });
             return response;
         } catch (error) {
@@ -111,7 +112,6 @@ class Controller {
         }
     }
 
-
     /////////////////////MEMBER_COUNT////////////////////////////
     //update_the_member_count_in_individual_project's_page
     async memberCount(data) {
@@ -120,10 +120,11 @@ class Controller {
                 connection.query(
                     `UPDATE project SET members = members + 1 WHERE pid = ${data} returning pid;`,
                     (err, result) => {
-                    if (err) reject(new Error(err.message));
+                        if (err) reject(new Error(err.message));
 
-                    resolve(result.rows);
-                });
+                        resolve(result.rows);
+                    }
+                );
             });
             return response;
         } catch (error) {
@@ -132,7 +133,6 @@ class Controller {
         }
     }
     ////////////////////////////////////////////////////////////
-
 
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
@@ -183,13 +183,19 @@ class Controller {
                 connection.query(
                     `SELECT employee.eid, employee.name FROM employee WHERE eid IN (SELECT eid FROM employee EXCEPT SELECT eid FROM allocation WHERE allocation.month= ${data});`,
                     (error, result2) => {
-                        console.log(result2.rows)
-                        for(let i=0; i<=(result2.rows.length-1); i++){
-                            resArr.push(  [ {month:data.replace(/[^a-zA-Z]+/g, ''),
-                                            eid: result2.rows[i].eid,
-                                            empname: result2.rows[i].name
-                                                    }]);}
-                            connection.query(`SELECT DISTINCT eid FROM allocation;`, (err, result) => {
+                        console.log(result2.rows);
+                        for (let i = 0; i <= result2.rows.length - 1; i++) {
+                            resArr.unshift([
+                                {
+                                    month: data.replace(/[^a-zA-Z]+/g, ""),
+                                    eid: result2.rows[i].eid,
+                                    empname: result2.rows[i].name,
+                                },
+                            ]);
+                        }
+                        connection.query(
+                            `SELECT DISTINCT eid FROM allocation;`,
+                            (err, result) => {
                                 if (err) reject(new Error(err.message));
                                 var l = result.rows.length;
                                 result.rows.map((i, j) => {
@@ -197,17 +203,23 @@ class Controller {
                                         `SELECT allocation.month, employee.eid, employee.name as empname, project.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${i.eid} AND allocation.month = ${data}`,
                                         (error, result1) => {
                                             var item = result1.rows;
-                                            resArr.push(item);
-                                            if (resArr.length == (result.rows.length + result2.rows.length)) {
+                                            resArr.unshift(item);
+                                            if (
+                                                resArr.length ==
+                                                result.rows.length +
+                                                    result2.rows.length
+                                            ) {
                                                 resolve(resArr);
                                             }
                                         }
                                     );
                                 });
-                            });
-                        })
-                    });
-                    return response;
+                            }
+                        );
+                    }
+                );
+            });
+            return response;
         } catch (error) {
             console.log("error in reading all data", error);
             return false;

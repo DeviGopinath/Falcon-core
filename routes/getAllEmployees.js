@@ -8,7 +8,6 @@ router.get("/", async (req, res) => {
         let users = false;
 
         users = await db.getAllEmployees();
-        console.log(users);
         if (users) {
             res.status(200).json({
                 message: "Retrieval successful",
