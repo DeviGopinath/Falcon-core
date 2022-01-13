@@ -73,7 +73,7 @@ class Controller {
     }
 
 
-    //////////////////PROJECTS A MEMBER IS NOT A PART OF//////////////
+    //////////////////PROJECTS_A_MEMBER_IS_NOT_A_PART_OF//////////////
     //get_the_project_into which_a_member_is_not_allocated_in_a_month
     async allocateMember(eid,month) {
         try {
@@ -119,6 +119,49 @@ class Controller {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
                     `UPDATE project SET members = members + 1 WHERE pid = ${data} returning pid;`,
+                    (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log("error in reading all data", error);
+            return false;
+        }
+    }
+    ////////////////////////////////////////////////////////////
+
+    /////////////////////ACTIVE_PROJECTS////////////////////////
+    //get_the_count_of_active_projects_in_a_month
+    async activeProjects(month) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(
+                    `SELECT COUNT (DISTINCT pid) FROM allocation WHERE allocation.month= '${month}';`,
+                    (err, result) => {
+                    if (err) reject(new Error(err.message));
+
+                    resolve(result.rows);
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log("error in reading all data", error);
+            return false;
+        }
+    }
+    ////////////////////////////////////////////////////////////
+
+
+    /////////////////////EMPLOYEE_COUNT////////////////////////
+    //get_the_count_of_employees_in_a_month
+    async totalMembers(month) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                connection.query(
+                    `SELECT COUNT (DISTINCT eid) FROM allocation WHERE allocation.month= '${month}';`,
                     (err, result) => {
                     if (err) reject(new Error(err.message));
 
