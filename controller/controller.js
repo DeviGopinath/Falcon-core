@@ -140,12 +140,13 @@ class Controller {
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
-                    `SELECT COUNT (DISTINCT pid) FROM allocation WHERE allocation.month= '${month}';`,
+                    `SELECT COUNT (DISTINCT pid) FROM allocation WHERE month = ${month} ;`,
                     (err, result) => {
-                    if (err) reject(new Error(err.message));
-
-                    resolve(result.rows);
-                });
+                        if (err) reject(new Error(err.message));
+                        console.log(result.rows);
+                        resolve(result.rows);
+                    }
+                );
             });
             return response;
         } catch (error) {
@@ -154,7 +155,6 @@ class Controller {
         }
     }
     ////////////////////////////////////////////////////////////
-
 
     /////////////////////EMPLOYEE_COUNT////////////////////////
     //get_the_count_of_employees_in_a_month
@@ -162,12 +162,13 @@ class Controller {
         try {
             const response = await new Promise((resolve, reject) => {
                 connection.query(
-                    `SELECT COUNT (DISTINCT eid) FROM allocation WHERE allocation.month= '${month}';`,
+                    `SELECT COUNT (DISTINCT eid) FROM allocation WHERE allocation.month= ${month};`,
                     (err, result) => {
-                    if (err) reject(new Error(err.message));
-
-                    resolve(result.rows);
-                });
+                        if (err) reject(new Error(err.message));
+                        console.log(result.rows);
+                        resolve(result.rows);
+                    }
+                );
             });
             return response;
         } catch (error) {
@@ -176,7 +177,6 @@ class Controller {
         }
     }
     ////////////////////////////////////////////////////////////
-
 
     /////////////////////EMPLOYEE////////////////////////////
     //get_the_info_to_display_in_the_employee_detail's_page
@@ -219,7 +219,6 @@ class Controller {
     //get_the_info_to_display_in_the_allocation_detail's_page
     async getAllocation(data1) {
         var data = data1;
-        console.log(data);
 
         try {
             const resArr = [];
@@ -227,7 +226,6 @@ class Controller {
                 connection.query(
                     `SELECT employee.eid, employee.name FROM employee WHERE eid IN (SELECT eid FROM employee EXCEPT SELECT eid FROM allocation WHERE allocation.month= ${data});`,
                     (error, result2) => {
-                        console.log(result2.rows);
                         for (let i = 0; i <= result2.rows.length - 1; i++) {
                             resArr.unshift([
                                 {

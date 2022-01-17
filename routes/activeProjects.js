@@ -5,7 +5,7 @@ const connection = require("../model/dbService");
 router.get("/", async (req, res) => {
     try {
         const db = controller.getDbServiceInstance();
-        var month = req.body.month;
+        var month = req.query.month;
         let users = false;
 
         users = await db.activeProjects(month);
