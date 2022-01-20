@@ -279,30 +279,37 @@ class Controller {
             const monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const response = await new Promise((resolve, reject) => {
             connection.query(
-                `SELECT distinct employee.eid FROM allocation INNER JOIN employee ON allocation.eid = employee.eid INNER JOIN project on project.pid = allocation.pid WHERE allocation.pid=2;`,
+                `SELECT distinct employee.eid FROM allocation INNER JOIN employee ON allocation.eid = employee.eid INNER JOIN project on project.pid = allocation.pid WHERE allocation.pid=${pid};`,
                     (error, result2) => {
                         for (let i = 0; i <= result2.rows.length - 1; i++) {
-                            resArr.push(result2.rows[i].eid);
+                            resArr.push([{eid: result2.rows[i].eid}],);
                                  }
                                 //  console.log(resArr);
-                                 resArr.forEach((eachEID) => { 
-                                    let eid = eachEID; 
+                               let l =resArr.length;
+                                 resArr.forEach((eachEID,k) => { 
+                                    let eid = eachEID[0].eid; 
+                                    console.log(eid);
                                     for (let i = 0; i <= monthArr.length - 1; i++) {
                                     // console.log(eachEID, monthArr[i]);                                    
                                     let month = monthArr[i];
                                     
                                     connection.query(
-                                        `SELECT employee.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${eid} AND project.pid = 2 AND allocation.month = '${month}';`,
+                                        `SELECT employee.name, employee.eid, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${eid} AND project.pid = ${pid} AND allocation.month = '${month}';`,
                                                 (error, result1) => {
                                                     var item = result1.rows;
                                                     if(item.length>0){
-                                                        finalArr.unshift({name: item[0].name, month: month, allocation: item[0].allocation, revenue: item[0].revenue});
+
+                                                        resArr[k].push({name: item[0].name,
+                                                                        hours: item[0].allocation,
+                                                                        revenue: item[0].revenue});
                                                     }
-                                                        if (
-                                                            finalArr.length == result2.rows.length + result1.rows.length
-                                                        ) {
-                                                            resolve(finalArr);
-                                                        }
+                                                        // if (
+                                                        //     resArr.length == result2.rows.length + result1.rows.length
+                                                        // ) { 
+                                                        //     console.log(resArr);
+                                                        //     resolve(resArr);
+                                                        // }
+                                                        console.log(resArr);
                                                    }
                                                 );
                                 }})
