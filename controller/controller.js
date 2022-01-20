@@ -268,6 +268,55 @@ class Controller {
         }
     }
     ////////////////////////////////////////////////////////////
+
+    
+    ////////////////////////ALLOCATION_&_REVENUE_TAB//////////////////////
+    //get_the_info_to_display_in_the_allocation_&revenue_tab
+    async allocationTab(pid) {
+        try {
+            const finalArr = [];
+            const resArr = [];
+            const monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const response = await new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT distinct employee.eid FROM allocation INNER JOIN employee ON allocation.eid = employee.eid INNER JOIN project on project.pid = allocation.pid WHERE allocation.pid=2;`,
+                    (error, result2) => {
+                        for (let i = 0; i <= result2.rows.length - 1; i++) {
+                            resArr.push(result2.rows[i].eid);
+                                 }
+                                //  console.log(resArr);
+                                 resArr.forEach((eachEID) => { 
+                                    let eid = eachEID; 
+                                    for (let i = 0; i <= monthArr.length - 1; i++) {
+                                    // console.log(eachEID, monthArr[i]);                                    
+                                    let month = monthArr[i];
+                                    
+                                    connection.query(
+                                        `SELECT employee.name, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${eid} AND project.pid = 2 AND allocation.month = '${month}';`,
+                                                (error, result1) => {
+                                                    var item = result1.rows;
+                                                    if(item.length>0){
+                                                        finalArr.unshift({name: item[0].name, month: month, allocation: item[0].allocation, revenue: item[0].revenue});
+                                                    }
+                                                        if (
+                                                            finalArr.length == result2.rows.length + result1.rows.length
+                                                        ) {
+                                                            resolve(finalArr);
+                                                        }
+                                                   }
+                                                );
+                                }})
+                    }
+                );
+            });
+            return response;
+        } catch (error) {
+            console.log("error in reading all data", error);
+            return false;
+        }
+    }
+    ////////////////////////////////////////////////////////////
+
 }
 
 module.exports = Controller;

@@ -11,6 +11,8 @@ const memberCount = require("./routes/memberCount");
 const allocateMember = require("./routes/allocateMember");
 const activeProjects = require("./routes/activeProjects");
 const totalMembers = require("./routes/totalMembers");
+const allocationTab = require("./routes/allocationTab");
+// const revenueTab = require("./routes/revenueTab");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -38,6 +40,8 @@ app.use("/projects/memberCount", memberCount);
 app.use("/allocation/allocateMember", allocateMember);
 app.use("/allocation/activeProjects", activeProjects);
 app.use("/allocation/totalMembers", totalMembers);
+app.use("/projects/allocationTab", allocationTab);
+// app.use("/projects/revenueTab", revenueTab);
 
 app.listen(process.env.PGSERVERPORT, () => {
     console.log("Running on port 5000");
