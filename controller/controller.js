@@ -294,22 +294,24 @@ class Controller {
                                     let month = monthArr[i];
                                     
                                     connection.query(
-                                        `SELECT employee.name, employee.eid, allocation.allocation, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${eid} AND project.pid = ${pid} AND allocation.month = '${month}';`,
+                                        `SELECT employee.name, employee.eid, allocation.allocation, allocation.month, allocation.revenue FROM allocation INNER JOIN employee ON employee.eid = allocation.eid INNER JOIN project ON project.pid = allocation.pid WHERE employee.eid = ${eid} AND project.pid = ${pid} AND allocation.month = '${month}';`,
                                                 (error, result1) => {
                                                     var item = result1.rows;
                                                     if(item.length>0){
 
                                                         resArr[k].push({name: item[0].name,
                                                                         hours: item[0].allocation,
-                                                                        revenue: item[0].revenue});
+                                                                        revenue: item[0].revenue,
+                                                                        month: item[0].month});
                                                     }
-                                                        // if (
-                                                        //     resArr.length == result2.rows.length + result1.rows.length
-                                                        // ) { 
-                                                        //     console.log(resArr);
-                                                        //     resolve(resArr);
-                                                        // }
-                                                        console.log(resArr);
+                                                        if (resArr[resArr.length-1][0].eid==eid && month=='Dec') { 
+                                                           for(i=0; i<resArr.length; i++){
+                                                               resArr[i].shift();
+                                                               console.log(resArr);
+                                                           }
+                                                            resolve(resArr);
+                                                        }
+                                                    //    resArr[resArr.length-1][0].eid==eid && month=='Dec');
                                                    }
                                                 );
                                 }})
